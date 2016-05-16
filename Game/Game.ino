@@ -32,9 +32,11 @@ const int colorR = 255;
 const int colorG = 255;
 const int colorB = 0;
 
-board b;
+board *b;
 
 unsigned long cnt = 0;
+
+int button_down = 0;
 
 void setup() 
 {
@@ -43,35 +45,38 @@ void setup()
     
     lcd.setRGB(colorR, colorG, colorB);
 
+    b = new board(millis());
+
     pinMode(3, INPUT);
 
-    b.print_board(&lcd);
+    b->print_board(&lcd);
     
     // Print a message to the LCD.
     //lcd.print("--------");
 
-    delay(1000);
+    delay(100);
 }
 
 void loop() 
 {
     if(digitalRead(3)) {
-        b.switch_bar();
+        button_down = 1;
+    } else if (button_down) {
+        button_down = 0;
+        b->switch_bar();
     }
     
-    if (cnt == 5) {
-        b.adv_board();
-        b.next_block();
+    if (cnt == (150 / (b->get_level()+1))){
+        b->adv_board();
+        b->next_block();
         cnt = 0;
-    } else if (cnt == 2) {
-        b.adv_board();
     }
 
-    b.print_board(&lcd);
+    b->print_board(&lcd);
 
-    cnt += 1;
+    cnt++;
 
-    delay(100);
+    delay(1);
 }
 
 /*********************************************************************************************************
