@@ -129,3 +129,7 @@ void board::switch_bar() {
 unsigned board::get_level() {
   return level;
 }
+
+void board::reset() {
+  gameover = 1;
+}

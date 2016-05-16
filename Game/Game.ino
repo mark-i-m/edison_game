@@ -59,6 +59,10 @@ void setup()
 
 void loop() 
 {
+    if(digitalRead(2)) {
+      b->reset();
+    }
+  
     if(digitalRead(3)) {
         button_down = 1;
     } else if (button_down) {

@@ -19,4 +19,5 @@ class board {
     void print_board(rgb_lcd *lcd);
     void switch_bar();
     unsigned get_level();
+    void reset();
 };

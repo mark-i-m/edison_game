@@ -4,7 +4,7 @@ Hardware Requirements
 ---------------------
 - Edison
 - Arduino breakout board
-- Button
+- 2 Button
 - (2x16) LCD display
 
 Software Requirements
