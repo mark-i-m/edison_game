@@ -4,7 +4,7 @@
 
 #define max(a,b) ((a) > (b) ? (a) : (b))
 
-#define NUM_COLORS 6
+#define NUM_COLORS 8
 int colors[NUM_COLORS][3] = {
   {255,255,255},
   {255,255,128},
@@ -12,6 +12,8 @@ int colors[NUM_COLORS][3] = {
   {255,128,128},
   {255,  0,255},
   {128,128,255},
+  {0  ,255,255},
+  {128,128,128},
 };
 
 board::board(unsigned long s) {
@@ -30,6 +32,31 @@ void board::init() {
 
   score = 1;
   level = 0;
+  gameover = 0;
+}
+
+void board::update_score(char block, int mode) {
+  switch (block) {
+    case '*':
+      if (mode == FELL) {
+        score -= 1;
+      } else if (mode == BLOCKED) {
+        score += 1;
+      }
+      break;
+
+    case '#':
+      if (mode == FELL) {
+        score -= 40;
+      }
+      break;
+
+    case '+':
+      if (mode == BLOCKED) {
+        score += 10;
+      }
+      break;
+  }
 }
 
 void board::adv_board() {
@@ -42,25 +69,39 @@ void board::adv_board() {
   // bar blocking the star
   // bar 1 = left
   if (b[0][BOARD_C-2] != ' ' && bar) {
+    update_score(b[0][BOARD_C-2], BLOCKED);
     b[0][BOARD_C-2] = ' ';
-    score++;
   } else if (b[1][BOARD_C-2] != ' ' && !bar) {
+    update_score(b[1][BOARD_C-2], BLOCKED);
     b[1][BOARD_C-2] = ' ';
-    score++;
   }
 
   // star fell through
-  if (b[0][BOARD_C-1] != ' ' ||
-      b[1][BOARD_C-1] != ' ') {
-        score--;
+  if (b[0][BOARD_C-1] != ' ') {
+    update_score(b[0][BOARD_C-1], FELL);
+  } else if (b[1][BOARD_C-1] != ' ') {
+    update_score(b[1][BOARD_C-1], FELL);
   }
 
-  // adjust level
-  level = score / 20;
-
   // game over
-  if (score == 0) {
+  if (score <= 0) {
     gameover = 1;
+  } else {
+    // adjust level
+    level = score / 20;
+  }
+}
+
+char board::get_new_block() {
+  int r = rand();
+
+  switch (r % 3) {
+    case 0:
+      return '*';
+    case 1:
+      return '#';
+    case 2:
+      return '+';
   }
 }
 
@@ -69,11 +110,11 @@ void board::next_block() {
 
   if (r % 3 == 0) {
     if (r % 2 == 0) {
-      b[bar][0] = '*';
+      b[bar][0] = get_new_block();
       b[!bar][0] = ' ';
     } else if (r % 5 == 0) {
       b[bar][0] = ' ';
-      b[!bar][0] = '*';
+      b[!bar][0] = get_new_block();
     }
   } else {
     b[0][0] = ' ';
@@ -119,7 +160,6 @@ void board::print_board(rgb_lcd *lcd) {
 
 void board::switch_bar() {
   if (gameover) {
-    gameover = 0;
     init();
   } else {
     bar = !bar;
