@@ -45,11 +45,11 @@ void setup()
     
     lcd.setRGB(colorR, colorG, colorB);
 
-    b = new board(millis());
+    b = new board(millis(), &lcd);
 
     pinMode(3, INPUT);
 
-    b->print_board(&lcd);
+    b->print_board();
     
     // Print a message to the LCD.
     //lcd.print("--------");
@@ -76,7 +76,7 @@ void loop()
         cnt = 0;
     }
 
-    b->print_board(&lcd);
+    b->print_board();
 
     cnt++;
 

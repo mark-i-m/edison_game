@@ -8,6 +8,7 @@
 
 class board {
     char b[BOARD_R][BOARD_C];
+    rgb_lcd *lcd;
     char bar = 0;
     char gameover = 0;
     int score = 1;
@@ -18,10 +19,10 @@ class board {
     void update_score(char block, int mode);
   
   public:
-    board(unsigned long s);
+    board(unsigned long s, rgb_lcd *l);
     void adv_board();
     void next_block();
-    void print_board(rgb_lcd *lcd);
+    void print_board();
     void switch_bar();
     unsigned get_level();
     void reset();

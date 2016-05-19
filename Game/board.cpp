@@ -16,8 +16,10 @@ int colors[NUM_COLORS][3] = {
   {128,128,128},
 };
 
-board::board(unsigned long s) {
+board::board(unsigned long s, rgb_lcd *l) {
   init();
+
+  lcd = l;
 
   // seed the random number generator
   srand(s);
@@ -122,7 +124,7 @@ void board::next_block() {
   }
 }
 
-void board::print_board(rgb_lcd *lcd) {
+void board::print_board() {
   char str1[] = "                ";
   char str2[] = "                ";
 
